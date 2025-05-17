@@ -1,0 +1,6 @@
+node_modules
+# Ignore the publish script
+publish-to-ghcr.sh
+# Ignore all .env files
+*.env
+**/.env
