@@ -21,27 +21,26 @@
 
   async function fetchCategories() {
     try {
-      const res = await axios.get('http://127.0.0.1:8055/items/categories');
-      categories = res.data.data;
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`);
+      categories = res.data;
     } catch (err) {
       // ignore for now
     }
   }
 
   async function fetchBlogs() {
-    let url = 'http://127.0.0.1:8055/items/blogs?fields=*,cover_image.*&sort[]=-created_at';
     categorySlug = getCategoryFromUrl();
-    let categoryId = null;
+    let url = `${import.meta.env.VITE_API_URL}/api/blogs`;
+    let params = {};
     if (categorySlug && categories.length > 0) {
       const cat = categories.find(c => c.slug === categorySlug);
       if (cat) {
-        categoryId = cat.id;
-        url += `&filter[category][_eq]=${categoryId}`;
+        params.category = cat.id;
       }
     }
     try {
-      const res = await axios.get(url);
-      blogs = res.data.data;
+      const res = await axios.get(url, { params });
+      blogs = res.data;
     } catch (err) {
       error = err.message || 'Failed to fetch blogs.';
     }
@@ -54,9 +53,8 @@
     }
   }
 
-  onMount(async () => {
-    await fetchCategories();
-    await fetchBlogs();
+  onMount(() => {
+    fetchCategories().then(() => fetchBlogs());
     window.addEventListener('popstate', fetchBlogs);
     return () => window.removeEventListener('popstate', fetchBlogs);
   });
@@ -73,7 +71,7 @@
     <div class="articles">
       {#each blogs as blog}
         <div class="card">
-          <img class="card-img" src={blog.cover_image ? `http://127.0.0.1:8055${blog.cover_image}` : '/placeholder.jpg'} alt={blog.title} />
+          <img class="card-img" src={blog.cover_image ? '/blogs/' + blog.cover_image.replace(/^\/assets\//, '') : '/placeholder.jpg'} alt={blog.title} />
           <div class="card-date">{blog.created_at}</div>
           <div class="card-title">{blog.title}</div>
           <div class="card-desc">{blog.summary}</div>

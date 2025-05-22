@@ -2,18 +2,18 @@ version: '3.8'
 
 services:
   directus:
-    image: ghcr.io/maqakh/sudvezi-directus:latest
+    image: ghcr.io/maqakh/sudvezi/sudvezi-directus:latest
     container_name: directus
     restart: always
     ports:
       - "8055:8055"
     volumes:
-      - ./directus-admin/.env:/directus/.env:ro
+      - ./directus-admin/.env:/directus/env-config:ro
     networks:
       - appnet
 
   backend:
-    image: ghcr.io/maqakh/sudvezi-backend:latest
+    image: ghcr.io/maqakh/sudvezi/sudvezi-backend:latest
     container_name: backend
     restart: always
     environment:
@@ -28,14 +28,15 @@ services:
       - appnet
 
   frontend:
-    image: ghcr.io/maqakh/sudvezi-frontend:latest
+    image: ghcr.io/maqakh/sudvezi/sudvezi-frontend:latest
     container_name: frontend
     restart: always
     ports:
       - "5173:80"
     depends_on:
       - backend
-      - directus
+    environment:
+      - VITE_API_URL=http://62.171.139.7:3000
     networks:
       - appnet
 

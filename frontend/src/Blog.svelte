@@ -17,8 +17,8 @@
   onMount(async () => {
     if (!slug) return;
     try {
-      const res = await axios.get(`http://127.0.0.1:8055/items/blogs?filter[slug][_eq]=${slug}`);
-      blog = res.data.data[0];
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/blogs`, { params: { slug } });
+      blog = res.data[0];
       if (!blog) error = 'Blog not found';
     } catch (err) {
       error = err.message || 'Failed to fetch blog.';
@@ -32,7 +32,7 @@
   {:else if blog}
     <h1 class="blog-title">{blog.title}</h1>
     {#if blog.cover_image}
-      <img class="blog-cover" src={`http://127.0.0.1:8055${blog.cover_image}`} alt={blog.title} />
+      <img class="blog-cover" src={'/blogs/' + blog.cover_image.replace(/^\/assets\//, '')} alt={blog.title} />
     {/if}
     <div class="blog-content">{@html blog.content}</div>
   {:else}

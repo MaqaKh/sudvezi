@@ -1,9 +1,9 @@
 <script>
   import { onMount } from 'svelte';
-  import axios from 'axios';
   import Router from 'svelte-spa-router';
   import routes from './routes.js';
   import { link } from 'svelte-spa-router';
+  import axios from 'axios';
 
   let blogs = [];
   let error = '';
@@ -13,23 +13,11 @@
   let showGunelMenu = false;
   let showHaqqindaSubmenu = false;
 
-  // Only fetch blogs if on the home page
-  onMount(async () => {
-    if (window.location.pathname !== '/') return;
-    try {
-      // Fetch blogs from Directus
-      const res = await axios.get('http://127.0.0.1:8055/items/blogs?fields=*,cover_image.*');
-      blogs = res.data.data;
-    } catch (err) {
-      error = err.message || 'Failed to fetch blogs.';
-    }
-  });
-
   // Fetch categories for navbar
   onMount(async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8055/items/categories');
-      categories = res.data.data;
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`);
+      categories = res.data;
     } catch (err) {
       error = err.message || 'Failed to fetch categories.';
     }

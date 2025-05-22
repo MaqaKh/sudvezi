@@ -42,8 +42,8 @@
   onMount(async () => {
     interval = setInterval(next, 5000);
     try {
-      const res = await axios.get('http://127.0.0.1:8055/items/blogs?fields=*,cover_image.*&sort[]=-created_at&limit=4');
-      blogs = res.data.data;
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/blogs`);
+      blogs = res.data;
     } catch (err) {
       blogError = err.message || 'Failed to fetch blogs.';
     }
@@ -163,7 +163,7 @@
       <div class="blog-row">
         {#each blogs as blog}
           <div class="blog-card">
-            <img class="blog-card-img" src={blog.cover_image ? `http://127.0.0.1:8055${blog.cover_image}` : '/placeholder.jpg'} alt={blog.title} />
+            <img class="blog-card-img" src={blog.cover_image ? '/blogs/' + blog.cover_image.replace(/^\/assets\//, '') : '/placeholder.jpg'} alt={blog.title} />
             <div class="blog-card-title">{blog.title}</div>
             <div class="blog-card-summary">{blog.summary}</div>
             <a class="blog-card-link" href={"/blog/" + blog.slug}>Devamını Oku</a>
