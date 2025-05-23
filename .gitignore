@@ -4,3 +4,4 @@ publish-to-ghcr.sh
 # Ignore all .env files
 *.env
 **/.env
+docker-compose.yml
