@@ -8,10 +8,10 @@ module.exports = {
   development: {
     client: 'mysql2',
     connection: {
-      host: '193.203.168.142',
-      user: 'u151991570_root',
-      password: 'Sudvezi123@',
-      database: 'u151991570_sudvezi'
+      host: process.env.DB_HOST || '127.0.0.1',
+      user: process.env.DB_USER || 'db_user',
+      password: process.env.DB_PASSWORD || 'db_password',
+      database: process.env.DB_DATABASE || 'db_name'
     }
   },
 
